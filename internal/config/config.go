@@ -1,9 +1,14 @@
 package config
 
 import (
+	"fmt"
+
 	"github.com/joho/godotenv"
 )
 
 func Init() {
-	_ = godotenv.Load()
+	err := godotenv.Load(".env")
+	if err != nil {
+		fmt.Printf("Error cargando .env: %v\n", err)
+	}
 }
