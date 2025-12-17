@@ -6,6 +6,7 @@ type Service interface {
 	GetAll() ([]Address, error)
 	Update(id uint, a *Address) (*Address, error)
 	Delete(id uint) error
+	HardDelete(id uint) error
 }
 
 type service struct {
@@ -40,4 +41,8 @@ func (s *service) Update(id uint, a *Address) (*Address, error) {
 
 func (s *service) Delete(id uint) error {
 	return s.repo.Delete(id)
+}
+
+func (s *service) HardDelete(id uint) error {
+	return s.repo.HardDelete(id)
 }
