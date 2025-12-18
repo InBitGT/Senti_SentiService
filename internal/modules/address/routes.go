@@ -7,9 +7,16 @@ import (
 )
 
 func SetupAddressRoutes(api *mux.Router, handler *Handler) {
-	address := api.PathPrefix("/addresses").Subrouter()
+	addr := api.PathPrefix("/addresses").Subrouter()
 
-	protected := address.NewRoute().Subrouter()
+	// Internos (sin JWT, con internal key)
+	internal := addr.PathPrefix("/internal").Subrouter()
+	internal.Use(middleware.InternalKeyMiddleware)
+	internal.HandleFunc("", handler.CreateInternal).Methods("POST")
+	internal.HandleFunc("/{id}", handler.DeleteInternal).Methods("DELETE")
+
+	// Protegidos (JWT)
+	protected := addr.NewRoute().Subrouter()
 	protected.Use(middleware.JWTMiddleware)
 
 	protected.HandleFunc("", handler.Create).Methods("POST")

@@ -8,6 +8,7 @@ type Repository interface {
 	GetAll() ([]Address, error)
 	Update(id uint, a *Address) error
 	Delete(id uint) error
+	HardDelete(id uint) error
 }
 
 type repository struct {
@@ -44,4 +45,8 @@ func (r *repository) Update(id uint, a *Address) error {
 
 func (r *repository) Delete(id uint) error {
 	return r.db.Delete(&Address{}, id).Error
+}
+
+func (r *repository) HardDelete(id uint) error {
+	return r.db.Unscoped().Where("id_address = ?", id).Delete(&Address{}).Error
 }
